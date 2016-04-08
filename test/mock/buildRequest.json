@@ -1,0 +1,13 @@
+{
+    "id": 1,
+    "engine": "native",
+    "platform": "android",
+    "flavor": "android-debug",
+    "status": "FAILED",
+    "startTime": "2016-01-01T00:00:00Z",
+    "endTime": "2016-01-01T00:00:00Z",
+    "message": "Error executing the build command",
+    "chainId": 1,
+    "createdDate": "2016-01-01T00:00:00Z",
+    "finished": true
+}

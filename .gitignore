@@ -1,0 +1,8 @@
+/node_modules
+/.idea
+/.config
+/src/.config
+/build
+
+npm-debug.log
+mocha.json

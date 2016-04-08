@@ -1,0 +1,10 @@
+engine:
+  name: "native"
+  version: "1.0"
+  platforms:
+    - name: "node"
+      version: 5.6.0
+      flavors:
+        - name: "test"
+          env:
+            script: "./build.sh"

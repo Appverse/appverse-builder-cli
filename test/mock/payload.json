@@ -1,0 +1,22 @@
+{
+    "id": 1,
+    "createdDate": "2016-01-01T00:00:00.0Z",
+    "requesterId": 1,
+    "requesterLogin": "cli",
+    "requests": [
+        {
+            "id": 1,
+            "engine": "native",
+            "platform": "android",
+            "flavor": "android-debug",
+            "status": "QUEUED",
+            "startTime": null,
+            "endTime": null,
+            "message": null,
+            "chainId": 1,
+            "createdDate": "2016-01-01T00:00:00.0Z",
+            "finished": false
+        }
+    ],
+    "options": {}
+}
