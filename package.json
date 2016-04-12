@@ -6,8 +6,16 @@
   "bin": {
     "apb": "./src/apb.js"
   },
+  "main": "./src/apb.js",
   "scripts": {
     "bamboo": "node node_modules/mocha/bin/mocha -R mocha-bamboo-reporter"
+  },
+  "license": "MPL-2.0",
+  "repository": "https://github.com/Appverse/appverse-builder-cli",
+  "author": {
+    "name": "Appverse",
+    "email": "github@appverse.org",
+    "url": "http://appverse.org"
   },
   "dependencies": {
     "adm-zip": "^0.4.7",
