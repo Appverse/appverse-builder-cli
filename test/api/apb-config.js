@@ -4,7 +4,9 @@ var common = require('./../common.js');
 var config = require('../../src/impl/apb-config-impl.js');
 var lib = common.lib;
 
-/*it('CONFIG (arg, arg) should configure a config value into the system', function (done) {
+/*
+In testing with mock-fs the config write is not working
+it('CONFIG (arg, arg) should configure a config value into the system', function (done) {
 
     config.run({
         args: ['key', 'value']
