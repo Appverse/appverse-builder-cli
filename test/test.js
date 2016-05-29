@@ -9,7 +9,7 @@ describe('CLI tests', function () {
     this.timeout(common.timeout);
 
 
-    before(function (done) {
+    beforeEach(function (done) {
 
         // Configure mock filesystem
         mock({
@@ -54,7 +54,7 @@ describe('CLI tests', function () {
 
     // TODO: Create test for integration test (bin execution) for the whole process
 
-    after(function (done) {
+    afterEach(function (done) {
         mock.restore();
         done();
     });
