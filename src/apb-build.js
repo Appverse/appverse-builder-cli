@@ -1,7 +1,7 @@
 'use strict';
 
 var program = require('commander');
-var sleep = require('sleep');
+//var sleep = require('sleep');
 var path = require('path');
 var lib = require('./lib.js');
 
@@ -54,12 +54,14 @@ require('./impl/apb-build-impl.js').run(program, lib, function (response) {
         var id = response.requests[0].id;
         var status = response.requests[0].status;
 
-        sleep.sleep(1);
+        //sleep.sleep(1);
+        lib.sleep(1000);
 
         // We have to wait for a non waiting status or the waiting limit exceeded
         while (lib.isWaitingStatus(status) && count < limit) {
 
-            sleep.sleep(2);
+            //sleep.sleep(2);
+            lib.sleep(2000);
             status = require('./impl/apb-status-impl.js').runsync(program, lib, id);
             count++;
             lib.log('info', 'Waiting for the build start. Iteration (' + count + '): ' + status);
@@ -79,11 +81,13 @@ require('./impl/apb-build-impl.js').run(program, lib, function (response) {
             require('./impl/apb-log-impl.js').run(program, lib, id, function () {
 
                 // After the logs, check the status until is finished
-                sleep.sleep(1);
+                //sleep.sleep(1);
+                lib.sleep(1000);
 
                 while (lib.isRunningStatus(status) && count < limit) {
 
-                    sleep.sleep(2);
+                    //sleep.sleep(2);
+                    lib.sleep(2000);
                     status = require('./impl/apb-status-impl.js').runsync(program, lib, id);
                     count++;
                     lib.log('info', 'Waiting for the build finish. Iteration (' + count + '): ' + status);
