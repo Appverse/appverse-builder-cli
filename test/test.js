@@ -43,8 +43,8 @@ describe('CLI tests', function () {
     common.importTest('help tests', './bin/apb-help.js');
     common.importTest('version tests', './bin/apb-version.js');
 
-    common.importTest('login tests', './api/apb-login.js');
     common.importTest('whoami tests', './api/apb-whoami.js');
+    common.importTest('login tests', './api/apb-login.js');
     common.importTest('config tests', './api/apb-config.js');
     common.importTest('build tests', './api/apb-build.js');
     common.importTest('status tests', './api/apb-status.js');
