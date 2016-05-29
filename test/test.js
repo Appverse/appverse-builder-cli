@@ -9,7 +9,7 @@ describe('CLI tests', function () {
     this.timeout(common.timeout);
 
 
-    before(function (done) {
+    beforeEach(function (done) {
 
         // Configure mock filesystem
         mock({
@@ -43,8 +43,8 @@ describe('CLI tests', function () {
     common.importTest('help tests', './bin/apb-help.js');
     common.importTest('version tests', './bin/apb-version.js');
 
-    common.importTest('login tests', './api/apb-login.js');
     common.importTest('whoami tests', './api/apb-whoami.js');
+    common.importTest('login tests', './api/apb-login.js');
     common.importTest('config tests', './api/apb-config.js');
     common.importTest('build tests', './api/apb-build.js');
     common.importTest('status tests', './api/apb-status.js');
@@ -54,7 +54,7 @@ describe('CLI tests', function () {
 
     // TODO: Create test for integration test (bin execution) for the whole process
 
-    after(function (done) {
+    afterEach(function (done) {
         mock.restore();
         done();
     });
