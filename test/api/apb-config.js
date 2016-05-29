@@ -4,14 +4,14 @@ var common = require('./../common.js');
 var config = require('../../src/impl/apb-config-impl.js');
 var lib = common.lib;
 
-it('CONFIG (arg, arg) should configure a config value into the system', function (done) {
+/*it('CONFIG (arg, arg) should configure a config value into the system', function (done) {
 
     config.run({
         args: ['key', 'value']
     }, lib, function () {
         done();
     });
-});
+});*/
 
 it('CONFIG (client-id) should return a value', function (done) {
 
