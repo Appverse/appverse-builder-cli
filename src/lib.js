@@ -749,6 +749,19 @@ module.exports = {
     },
 
     /**
+     * Function waiting some milliseconds in javascript
+     * @param _millis Milliseconds to wait
+     */
+    sleep: function (_millis) {
+      var start = new Date().getTime();
+      for (var i = 0; i < 1e7; i++) {
+        if ((new Date().getTime() - start) > _millis){
+          break;
+        }
+      }
+    },
+
+    /**
      * API calls configuration. Url's, methods and header for configuring
      * the requests to the Builder Host
      */
