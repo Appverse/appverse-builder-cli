@@ -8,7 +8,8 @@
   },
   "main": "./src/apb.js",
   "scripts": {
-    "bamboo": "node node_modules/mocha/bin/mocha -R mocha-bamboo-reporter"
+      "bamboo": "mocha -R mocha-bamboo-reporter",
+      "test": "mocha"
   },
   "license": "MPL-2.0",
   "repository": "https://github.com/Appverse/appverse-builder-cli",
