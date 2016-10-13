@@ -197,16 +197,16 @@ module.exports = {
      */
     validateArgsVariable: function (program, n) {
 
-        var self = this, founded = false;
+        var self = this, found = false;
 
         n.forEach(function (number) {
             if (program.args.length === number) {
                 self.log('debug', 'number of arguments correct: expected=' + n + ', args=' + program.args.length);
-                founded = true;
+                found = true;
             }
         });
 
-        if (!founded) {
+        if (!found) {
             this.log('error', 'The number of arguments is not correct.');
             this.exit(1);
         }
