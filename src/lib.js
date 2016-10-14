@@ -465,7 +465,8 @@ module.exports = {
             ignore = parser.compile(fs.readFileSync(path.join(_path, ignoreFile), 'utf8'));
         } catch (e) {
             if (e.code === 'ENOENT') {
-                self.log('warn', 'There is not ignoring file [' + ignoreFile + '] Please, consider adding one to avoid sending useless file to build.');
+                self.log('warn', 'Ignore File [' + ignoreFile + '] missing. Please, consider adding one to avoid sending useless files to build.');
+                ignore = parser.compile('');
             } else {
                 self.log('error', e.message);
                 self.exit(1);
