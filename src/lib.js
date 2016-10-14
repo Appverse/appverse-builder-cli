@@ -390,18 +390,22 @@ module.exports = {
             } else {
                 this.log('debug', 'config.engine: ' + JSON.stringify(_config.engine));
             }
-            if (_config.engine.platforms.length < 0) {
+            if (_config.engine.platforms) {
+              if (_config.engine.platforms.length < 0) {
+                  this.log('error', 'There are no platforms configured in the ' + this.getConfig('configFile') + ' for the engine ' + _config.engine.name + '.');
+                  this.exit(1);
+              } else {
+                  this.log('debug', 'config.engine.platforms: ' + JSON.stringify(_config.engine.platforms));
+              }
+            } else {
                 this.log('error', 'There are no platforms configured in the ' + this.getConfig('configFile') + ' for the engine ' + _config.engine.name + '.');
                 this.exit(1);
-            } else {
-                this.log('debug', 'config.engine.platforms: ' + JSON.stringify(_config.engine.platforms));
             }
 
             // TODO: Add more validations following the wiki
 
         } catch (e) {
-            this.log('error', e.message);
-            this.log('error', 'There is a problem parsing the ' + this.getConfig('configFile') + ' file.');
+            this.log('error', 'There is a error parsing the ' + this.getConfig('configFile') + ' file: ' + e.message);
             this.exit(1);
         }
 
