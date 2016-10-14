@@ -447,6 +447,7 @@ module.exports = {
 
         output.on('close', function () {
             self.log('debug', 'Zip generated: ' + self.getZipPayloadPath() + ' (' + archive.pointer() + ' bytes).');
+            self.log('info', 'Zipped ' + numberOfFiles + ' files: ' + archive.pointer() + ' bytes.');
             callback(self.getFileSystem().createReadStream(self.getZipPayloadPath()));
         });
         output.on('error', function (e) {
@@ -489,7 +490,6 @@ module.exports = {
                     });
                 }
             });
-            self.log('info', 'Zipped ' + numberOfFiles + ' files.');
             archive.finalize();
         });
     },
