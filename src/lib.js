@@ -365,9 +365,10 @@ module.exports = {
             this.log('debug', 'Current folder: ' + folder + ' is valid :)');
             return config;
         } catch (e) {
-            this.log('error', e.message);
             if (e.code === 'ENOENT') {
                 this.log('error', 'The current folder is not an valid project folder. There is no ' + this.getConfig('configFile') + ' file.');
+            } else {
+                this.log('error', e.message);
             }
             this.exit(1);
         }
