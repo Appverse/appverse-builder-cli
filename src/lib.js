@@ -380,29 +380,76 @@ module.exports = {
      */
     isValidConfigFile: function (_config) {
 
+        var self = this;
+
         this.log('debug', 'Validating config file: ' + this.getConfig('configFile'));
 
         try {
-            // Validate config file contents
-            if (!_config.engine) {
-                this.log('error', 'The engine is not configured in the ' + this.getConfig('configFile') + '.');
-                this.exit(1);
-            } else {
+            // Validate engine
+            if (_config.engine) {
+              this.log('debug', 'config.engine: ' + JSON.stringify(_config.engine));
+
+              // Validate engine fields
+              if (_config.engine.name && _config.engine.version) {
                 this.log('debug', 'config.engine: ' + JSON.stringify(_config.engine));
-            }
-            if (_config.engine.platforms) {
-              if (_config.engine.platforms.length < 0) {
-                  this.log('error', 'There are no platforms configured in the ' + this.getConfig('configFile') + ' for the engine ' + _config.engine.name + '.');
-                  this.exit(1);
               } else {
-                  this.log('debug', 'config.engine.platforms: ' + JSON.stringify(_config.engine.platforms));
+                this.log('error', 'The engine should be configured with [name] and [version] in the ' + this.getConfig('configFile') + '.');
+                this.exit(1);
               }
             } else {
-                this.log('error', 'There are no platforms configured in the ' + this.getConfig('configFile') + ' for the engine ' + _config.engine.name + '.');
-                this.exit(1);
+              this.log('error', 'The engine is not configured in the ' + this.getConfig('configFile') + '.');
+              this.exit(1);
             }
 
-            // TODO: Add more validations following the wiki
+            // Validate platforms
+            if (_config.engine.platforms) {
+              if (_config.engine.platforms.length > 0) {
+                this.log('debug', 'config.engine.platforms: ' + JSON.stringify(_config.engine.platforms));
+
+                _config.engine.platforms.forEach(function (platform) {
+                  if (platform.name && platform.version) {
+                    self.log('debug', 'platform.name: ' + JSON.stringify(platform.name));
+                    self.log('debug', 'platform.version: ' + JSON.stringify(platform.version));
+                  } else {
+                    self.log('error', 'The platform should be configured with [name] and [version] in the ' + self.getConfig('configFile') + '.');
+                    self.exit(1);
+                  }
+                });
+
+              } else {
+                this.log('error', 'There are no platforms configured in the ' + this.getConfig('configFile') + ' for the engine ' + _config.engine.name + '.');
+                this.exit(1);
+              }
+            } else {
+              this.log('error', 'There are no platforms configured in the ' + this.getConfig('configFile') + ' for the engine ' + _config.engine.name + '.');
+              this.exit(1);
+            }
+
+            // Validate flavors
+            _config.engine.platforms.forEach(function (platform) {
+
+              if (platform.flavors) {
+                if (platform.flavors.length > 0) {
+
+                  platform.flavors.forEach(function (flavor) {
+                    if (flavor.name) {
+                      self.log('debug', 'flavor.name: ' + JSON.stringify(flavor.name));
+                      self.log('debug', 'flavor.version: ' + JSON.stringify(flavor.version));
+                    } else {
+                      self.log('error', 'The flavor should be configured with [name] in the ' + self.getConfig('configFile') + '.');
+                      self.exit(1);
+                    }
+                  });
+
+                } else {
+                  self.log('error', 'There are no flavors configured in the ' + self.getConfig('configFile') + ' for the platform ' + platform.name + '.');
+                  self.exit(1);
+                }
+              } else {
+                self.log('error', 'There are no flavors configured in the ' + self.getConfig('configFile') + ' for the platform ' + platform.name + '.');
+                self.exit(1);
+              }
+            });
 
         } catch (e) {
             this.log('error', 'There is a error parsing the ' + this.getConfig('configFile') + ' file: ' + e.message);
