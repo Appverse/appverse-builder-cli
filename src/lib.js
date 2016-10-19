@@ -197,16 +197,16 @@ module.exports = {
      */
     validateArgsVariable: function (program, n) {
 
-        var self = this, founded = false;
+        var self = this, found = false;
 
         n.forEach(function (number) {
             if (program.args.length === number) {
                 self.log('debug', 'number of arguments correct: expected=' + n + ', args=' + program.args.length);
-                founded = true;
+                found = true;
             }
         });
 
-        if (!founded) {
+        if (!found) {
             this.log('error', 'The number of arguments is not correct.');
             this.exit(1);
         }
@@ -365,9 +365,10 @@ module.exports = {
             this.log('debug', 'Current folder: ' + folder + ' is valid :)');
             return config;
         } catch (e) {
-            this.log('error', e.message);
             if (e.code === 'ENOENT') {
                 this.log('error', 'The current folder is not an valid project folder. There is no ' + this.getConfig('configFile') + ' file.');
+            } else {
+                this.log('error', e.message);
             }
             this.exit(1);
         }
@@ -379,28 +380,79 @@ module.exports = {
      */
     isValidConfigFile: function (_config) {
 
+        var self = this;
+
         this.log('debug', 'Validating config file: ' + this.getConfig('configFile'));
 
         try {
-            // Validate config file contents
-            if (!_config.engine) {
-                this.log('error', 'The engine is not configured in the ' + this.getConfig('configFile') + '.');
-                this.exit(1);
-            } else {
+            // Validate engine
+            if (_config.engine) {
+              this.log('debug', 'config.engine: ' + JSON.stringify(_config.engine));
+
+              // Validate engine fields
+              if (_config.engine.name && _config.engine.version) {
                 this.log('debug', 'config.engine: ' + JSON.stringify(_config.engine));
+              } else {
+                this.log('error', 'The engine should be configured with [name] and [version] in the ' + this.getConfig('configFile') + '.');
+                this.exit(1);
+              }
+            } else {
+              this.log('error', 'The engine is not configured in the ' + this.getConfig('configFile') + '.');
+              this.exit(1);
             }
-            if (_config.engine.platforms.length < 0) {
+
+            // Validate platforms
+            if (_config.engine.platforms) {
+              if (_config.engine.platforms.length > 0) {
+                this.log('debug', 'config.engine.platforms: ' + JSON.stringify(_config.engine.platforms));
+
+                _config.engine.platforms.forEach(function (platform) {
+                  if (platform.name && platform.version) {
+                    self.log('debug', 'platform.name: ' + JSON.stringify(platform.name));
+                    self.log('debug', 'platform.version: ' + JSON.stringify(platform.version));
+                  } else {
+                    self.log('error', 'The platform should be configured with [name] and [version] in the ' + self.getConfig('configFile') + '.');
+                    self.exit(1);
+                  }
+                });
+
+              } else {
                 this.log('error', 'There are no platforms configured in the ' + this.getConfig('configFile') + ' for the engine ' + _config.engine.name + '.');
                 this.exit(1);
+              }
             } else {
-                this.log('debug', 'config.engine.platforms: ' + JSON.stringify(_config.engine.platforms));
+              this.log('error', 'There are no platforms configured in the ' + this.getConfig('configFile') + ' for the engine ' + _config.engine.name + '.');
+              this.exit(1);
             }
 
-            // TODO: Add more validations following the wiki
+            // Validate flavors
+            _config.engine.platforms.forEach(function (platform) {
+
+              if (platform.flavors) {
+                if (platform.flavors.length > 0) {
+
+                  platform.flavors.forEach(function (flavor) {
+                    if (flavor.name) {
+                      self.log('debug', 'flavor.name: ' + JSON.stringify(flavor.name));
+                      self.log('debug', 'flavor.version: ' + JSON.stringify(flavor.version));
+                    } else {
+                      self.log('error', 'The flavor should be configured with [name] in the ' + self.getConfig('configFile') + '.');
+                      self.exit(1);
+                    }
+                  });
+
+                } else {
+                  self.log('error', 'There are no flavors configured in the ' + self.getConfig('configFile') + ' for the platform ' + platform.name + '.');
+                  self.exit(1);
+                }
+              } else {
+                self.log('error', 'There are no flavors configured in the ' + self.getConfig('configFile') + ' for the platform ' + platform.name + '.');
+                self.exit(1);
+              }
+            });
 
         } catch (e) {
-            this.log('error', e.message);
-            this.log('error', 'There is a problem parsing the ' + this.getConfig('configFile') + ' file.');
+            this.log('error', 'There is a error parsing the ' + this.getConfig('configFile') + ' file: ' + e.message);
             this.exit(1);
         }
 
@@ -442,6 +494,7 @@ module.exports = {
 
         output.on('close', function () {
             self.log('debug', 'Zip generated: ' + self.getZipPayloadPath() + ' (' + archive.pointer() + ' bytes).');
+            self.log('info', 'Zipped ' + numberOfFiles + ' files: ' + archive.pointer() + ' bytes.');
             callback(self.getFileSystem().createReadStream(self.getZipPayloadPath()));
         });
         output.on('error', function (e) {
@@ -459,7 +512,8 @@ module.exports = {
             ignore = parser.compile(fs.readFileSync(path.join(_path, ignoreFile), 'utf8'));
         } catch (e) {
             if (e.code === 'ENOENT') {
-                self.log('warn', 'There is not ignoring file [' + ignoreFile + '] Please, consider adding one to avoid sending useless file to build.');
+                self.log('warn', 'Ignore File [' + ignoreFile + '] missing. Please, consider adding one to avoid sending useless files to build.');
+                ignore = parser.compile('');
             } else {
                 self.log('error', e.message);
                 self.exit(1);
@@ -484,7 +538,6 @@ module.exports = {
                     });
                 }
             });
-            self.log('info', 'Zipped ' + numberOfFiles + ' files.');
             archive.finalize();
         });
     },
