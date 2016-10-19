@@ -42,6 +42,56 @@ if (program.env) {
     program.envVars = envVars;
 }
 
+/**
+ * Function for getting the logs of the build, it includes some health checks
+ * if the logs stopped for some other reasons (ngin timeout)
+ * @param  {number} id     id of the build to check
+ * @param  {string} status previous status of the build
+ * @return {[type]}        [description]
+ */
+function getLogs(id, status) {
+
+  lib.log('debug', '(' + logCount + ') Checking the logs... (' + id + ') ' + status);
+
+  // If we hecked so many times the logs...
+  if (logCount === logLimit) {
+    lib.log('error', 'The logs have been restarted to many times, Exiting... Please contact with your administrator');
+    lib.exit(1);
+  }
+  logCount++;
+
+  // Printing the logs
+  require('./impl/apb-log-impl.js').run(program, lib, id, function () {
+
+    var status = require('./impl/apb-status-impl.js').runsync(program, lib, id);
+
+    // If the status is still running (QUEUED, RUNNING)
+    if (lib.isRunningStatus(status)) {
+      lib.log('debug', 'The logs ended with a running status: ' + status);
+      getLogs(id, status);
+    } else {
+
+      lib.log('debug', 'The logs ended with a not running status: ' + status);
+
+      // Showing the status
+      require('./impl/apb-status-impl.js').run(program, lib, id, function (status) {
+
+        program.zip = true;
+        program.folder = path.join(program.folder || '.', 'build');
+        // Downloading the artifacts
+        require('./impl/apb-download-impl.js').run(program, lib, id, function () {
+          if (lib.isValidStatus(status)) {
+            lib.exit(0);
+          } else {
+            lib.log('error', 'The actual build finished with an error. Please review the logs');
+            lib.exit(1);
+          }
+        });
+      });
+    }
+  });
+}
+
 // -------------------------------------------------------------------------------------------
 // Build process
 // -------------------------------------------------------------------------------------------
@@ -96,51 +146,3 @@ require('./impl/apb-build-impl.js').run(program, lib, function (response) {
     lib.exit(0);
   }
 });
-
-/**
- * Function for getting the logs of the build, it includes some health checks
- * if the logs stopped for some other reasons (ngin timeout)
- * @param  {number} id     id of the build to check
- * @param  {string} status previous status of the build
- * @return {[type]}        [description]
- */
-function getLogs(id, status) {
-
-  lib.log('debug', '(' + logCount + ') Checking the logs... (' + id + ') ' + status);
-
-  // If we hecked so many times the logs...
-  if (logCount === logLimit) {
-    lib.log('error', 'The logs have been restarted to many times, Exiting... Please contact with your administrator');
-    lib.exit(1);
-  }
-  logCount++;
-
-  // Printing the logs
-  require('./impl/apb-log-impl.js').run(program, lib, id, function (status) {
-
-    // If the status is still running (QUEUED, RUNNING)
-    if (lib.isRunningStatus(status)) {
-      lib.log('debug', 'The logs ended with a running status: ' + status);
-      getLogs(id, status);
-    } else {
-
-      lib.log('debug', 'The logs ended with a not running status: ' + status);
-
-      // Showing the status
-      require('./impl/apb-status-impl.js').run(program, lib, id, function (status) {
-
-        program.zip = true;
-        program.folder = path.join(program.folder || '.', 'build');
-        // Downloading the artifacts
-        require('./impl/apb-download-impl.js').run(program, lib, id, function () {
-          if (lib.isValidStatus(status)) {
-            lib.exit(0);
-          } else {
-            lib.log('error', 'The actual build finished with an error. Please review the logs');
-            lib.exit(1);
-          }
-        });
-      });
-    }
-  });
-}

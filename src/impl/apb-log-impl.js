@@ -10,7 +10,7 @@ module.exports = {
         req.debug = program.debug;
         // Url manipulations
         // The if fix the bug when we are running this function on the same JS context
-        if (lib.api.log.url.indexOf('{id}') != -1) {
+        if (lib.api.log.url.indexOf('{id}') !== -1) {
           lib.api.log.url = lib.getConfig('endpoint') + lib.api.log.url.replace('{id}', id);
         }
 
@@ -41,10 +41,7 @@ module.exports = {
 
             // Every time we receive data
             .on('end', function () {
-                lib.sleep(100);
-                var status = require('./apb-status-impl.js').runsync(program, lib, id);
-                lib.log('debug', 'The logs ended with status: ' + status);
-                callback(status);
+                callback();
             });
 
         // Pipe the response to stdout
