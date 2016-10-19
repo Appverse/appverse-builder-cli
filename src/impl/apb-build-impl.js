@@ -40,7 +40,7 @@ module.exports = {
             config.engine.platforms.forEach(function (platform) {
                 platform.flavors.forEach(function (flavor) {
                     if (flavor.name === program.flavor) {
-                        lib.log('debug', 'flavor founded on the yml:' + flavor.name);
+                        lib.log('debug', 'flavor found on the yml:' + flavor.name);
                         flavorCount++;
                     }
                 });
@@ -50,7 +50,7 @@ module.exports = {
                 lib.log('error', 'You specified a flavor that is not configured on the configuration file.');
                 lib.exit(1);
             } else if (flavorCount > 1) {
-                lib.log('error', 'The flavor name <' + program.flavor + '> must be unique on the configuration file. Founded ' + flavorCount + ' occurrences.');
+                lib.log('error', 'The flavor name <' + program.flavor + '> must be unique on the configuration file. Found ' + flavorCount + ' occurrences.');
                 lib.exit(1);
             } else {
                 lib.log('debug', 'Calling the build command with the flavor: ' + program.flavor);
