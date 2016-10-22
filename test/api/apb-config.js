@@ -60,6 +60,15 @@ it('CONFIG (ignoreFile) should return a value', function (done) {
     });
 });
 
+it('CONFIG (log-retries) should return a value', function (done) {
+
+    config.run({
+        args: ['log-retries']
+    }, lib, function () {
+        done();
+    });
+});
+
 it('CONFIG (list) should return the list of configured values', function (done) {
 
     config.run({
