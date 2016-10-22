@@ -22,7 +22,8 @@ describe('CLI tests', function () {
                 'configFile': 'config.yml',
                 'ignoreFile': 'ignoreFile',
                 'client-id': 'client-id',
-                'client-secret': 'client-secret'
+                'client-secret': 'client-secret',
+                'log-retries': '10'
             },
             'build': {
                 'config.yml': fs.readFileSync('./test/mock/config.yml')

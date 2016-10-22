@@ -5,7 +5,7 @@ var program = require('commander');
 var path = require('path');
 var lib = require('./lib.js');
 
-var logCount = 1, logLimit = 5;
+var logCount = 1, logLimit = lib.getConfig('log-retries');
 
 lib.setFileSystem(require('graceful-fs'));
 
