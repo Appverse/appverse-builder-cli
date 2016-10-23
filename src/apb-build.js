@@ -5,7 +5,7 @@ var program = require('commander');
 var path = require('path');
 var lib = require('./lib.js');
 
-var logCount = 1, logLimit = lib.getConfig('log-retries');
+var logCount = 1, loglimit = 5;
 
 lib.setFileSystem(require('graceful-fs'));
 
@@ -51,10 +51,10 @@ if (program.env) {
  */
 function getLogs(id, status) {
 
-  lib.log('debug', '(' + logCount + ') Checking the logs... (' + id + ') ' + status);
+  lib.log('debug', '(' + logCount + ' of ' + loglimit + ') Checking the logs... (' + id + ') ' + status);
 
   // If we hecked so many times the logs...
-  if (logCount === logLimit) {
+  if (logCount === loglimit) {
     lib.log('error', 'The logs have been restarted to many times, Exiting... Please contact with your administrator');
     lib.exit(1);
   }
@@ -105,8 +105,9 @@ require('./impl/apb-build-impl.js').run(program, lib, function (response) {
     var count = 0, limit = 100;
     var id = response.requests[0].id;
     var status = response.requests[0].status;
+    loglimit = lib.getConfig('log-retries');
 
-    lib.sleep(100);
+    //lib.sleep(100);
 
     // We have to wait for a non waiting status (QUEUED) or the waiting limit exceeded
     while (lib.isWaitingStatus(status) && count < limit) {
