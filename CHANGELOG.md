@@ -2,6 +2,11 @@
 
 Command Line Interface for communicating the clients with the builder services.
 
+## [1.0.5] - 2017-05-08
+
+### Changed
+- Repository README
+
 ## [1.0.4] - 2016-10-23
 
 ### Added
