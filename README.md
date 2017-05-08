@@ -15,7 +15,7 @@ You should have [NodeJS](https://nodejs.org/en/) installed on your machine befor
 The Command Line Interface is a system command, so the installation should be global (-g option) and the custom registry should be specified.
 
 ```
-npm install -g appverse-builder-cli --registry=http://appverse.gftlabs.com/artifacts/content/groups/npm-public
+npm install -g appverse-builder-cli --registry=https://nexus3.gftlabs.com/repository/npm-public
 ```
 
 If you want to see all the available commands of the client you could run:
